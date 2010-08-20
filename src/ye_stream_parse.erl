@@ -3,12 +3,27 @@
 
 -include("yeml.hrl").
 
+-record(pstate, {directives = false, cbs}).
 
--spec bin(binary(), #ye_cb_state{}) -> any().
+-define(CALLBACK(NAME, STATE), case (STATE#pstate.cbs)#ye_cb_state.NAME of
+                undefined -> STATE;
+                Callback  -> STATE#pstate{cbs = check_cbs(Callback(STATE#pstate.cbs))}
+        end).
 
-bin(<<"---", Rest/binary>>, State) ->
-        bin(Rest, (State#ye_cb_state.doc_begin)(State));
-bin(<<"...", Rest/binary>>, State) ->
-        bin(Rest, (State#ye_cb_state.doc_end)(State));
-bin(<<>>, State) ->
-        State#ye_cb_state.state.
+-spec bin(binary(), #pstate{}) -> any().
+bin(Binary, State) ->
+        parse(Binary, #pstate{cbs = State}).
+
+parse(<<"---\n", Rest/binary>>, State) ->
+        parse(Rest, ?CALLBACK(dir_end, State));
+parse(<<"...\n", Rest/binary>>, State) ->
+        parse(Rest, ?CALLBACK(doc_end, State));
+parse(<<$\n, Rest/binary>>, State) ->
+        parse(Rest, State);
+        parse(<<>>, State) ->
+        State#pstate.cbs.
+
+check_cbs(#ye_cb_state{} = S) ->
+        S;
+check_cbs(S) ->
+        erlang:error({bad_return, S}). 
