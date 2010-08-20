@@ -1,0 +1,11 @@
+{application, yeml,
+ [
+  {description, "YAML library for Erlang."},
+  {vsn, "0.1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.

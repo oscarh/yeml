@@ -1,0 +1,6 @@
+ebin/yeml.app
+ebin/*.beam
+
+
+*.swp
+*.swo
