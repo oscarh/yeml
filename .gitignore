@@ -1,6 +1,7 @@
 ebin/yeml.app
 ebin/*.beam
 
+.eunit
 
 *.swp
 *.swo
