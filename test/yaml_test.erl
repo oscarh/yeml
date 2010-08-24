@@ -8,7 +8,7 @@
 simlpe_document_test() ->
     {ok, Bin} = file:read_file(?SIMPLE_FILE),
     State = #ye_cb_state{
-        state= [doc_begin, doc_end, {comment, "End document"}],
+        state= [doc_begin, doc_end, {comment, <<"End document">>}],
         doc_begin = fun(S) ->
                 ?assertMatch(doc_begin, hd(S#ye_cb_state.state)),
                 S#ye_cb_state{state=tl(S#ye_cb_state.state)}
