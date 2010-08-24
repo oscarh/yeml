@@ -23,9 +23,9 @@ parse(<<"---", C, Rest/binary>>, State) when ?IS_WHITESPACE(C) ->
     parse(Rest, ?CALLBACK(doc_begin, [], X));
 parse(<<"...", C, Rest/binary>>, State) when ?IS_WHITESPACE(C) ->
     parse(Rest, ?CALLBACK(doc_end, [], State));
-parse(<<$#, Rest/binary>>, State) ->
-    {Comment, Rest2} = consume_until_newline(Rest),
-    parse(Rest2, ?CALLBACK(comment, [Comment], State));
+parse(<<$#, CommentAndRest/binary>>, State) ->
+    {Comment, Rest} = consume_until_newline(CommentAndRest),
+    parse(Rest, ?CALLBACK(comment, [Comment], State));
 parse(<<$\n, Rest/binary>>, State) ->
     parse(Rest, State);
 parse(<<>>, State) ->
